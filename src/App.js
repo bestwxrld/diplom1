@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';  // Можно оставить для навигации по якорям
+import Navigation from './components/Navigation';
+import AllTasks from './components/AllTasks';
+import Results from './components/Results';
+import Timer from './components/Timer';
+import './styles.css';
 
 function App() {
+  const [answers, setAnswers] = useState({});
+  const [timeLeft, setTimeLeft] = useState(150 * 60); // 150 минут в секундах
+
+  const handleAnswer = (taskNumber, answer) => {
+    setAnswers(prev => ({ ...prev, [taskNumber]: answer }));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="app">
+        <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
+        <Navigation />
+        <div className="content" style={{ maxHeight: 'auto', overflowY: 'auto' }}>
+          <AllTasks answers={answers} onAnswer={handleAnswer} />
+          {/* Можно добавить кнопку "Показать результаты" */}
+          <Results answers={answers} />
+        </div>
+      </div>
+    </Router>
   );
 }
 
